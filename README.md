@@ -22,3 +22,24 @@ Optional features:
   - Update
   - Keys
 - wal
+
+##### Todo list:
+- [ ] Set string key
+- [ ] Set lists with (https://redis.io/topics/data-types#lists)
+- [ ] Set dict (https://redis.io/topics/data-types#hashes)
+- [ ] Set TTL
+- [ ] Get string key
+- [ ] Get lists, range, concrete index
+- [ ] Get dict
+- [ ] Remove key
+- [ ] Get all keys
+- [ ] Get stats
+- [ ] Export to json
+- [ ] Import from json
+- [ ] Telnet like protocol
+- [ ] Golang API client
+- [ ] Persistence to disk/db
+- [ ] Auth
+- [ ] Scaling (Replica set, more space with more nodes)
+- [ ] Benchmarks
+- [ ] Unit Tests
