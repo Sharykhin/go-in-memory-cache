@@ -43,3 +43,5 @@ Optional features:
 - [ ] Scaling (Replica set, more space with more nodes)
 - [ ] Benchmarks
 - [ ] Unit Tests
+- [ ] Configure docker to run all in one click
+- [ ] Provide some use cases
