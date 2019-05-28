@@ -28,6 +28,7 @@ Optional features:
 - [ ] Set lists with (https://redis.io/topics/data-types#lists)
 - [ ] Set dict (https://redis.io/topics/data-types#hashes)
 - [ ] Set TTL
+- [ ] New Set on key with TTL should drop previous ttl
 - [ ] Get string key
 - [ ] Get lists, range, concrete index
 - [ ] Get dict
