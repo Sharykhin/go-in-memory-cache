@@ -81,12 +81,12 @@ func TestInMemoryStorage_LPUSH(t *testing.T) {
 
 	assert.Equal(t, 1, num)
 
-	num, err = cache.LPUSH("testlist", "world")
+	num, err = cache.LPUSH("testlist", "world", "!!!")
 	if err != nil {
 		t.Errorf("failed to push item into a list: %v", err)
 	}
 
-	assert.Equal(t, 2, num)
+	assert.Equal(t, 3, num)
 }
 
 func TestInMemoryStorage_RPUSH(t *testing.T) {

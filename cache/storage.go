@@ -118,14 +118,14 @@ func (s *InMemoryStorage) TYPE(key string) string {
 	}
 }
 
-func (s *InMemoryStorage) LPUSH(key string, value string) (int, error) {
+func (s *InMemoryStorage) LPUSH(key string, value ...string) (int, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	list, ok := s.bucket[key]
 	if !ok {
-		s.bucket[key] = Lists{value}
-		return 1, nil
+		s.bucket[key] = Lists(value)
+		return len(value), nil
 	}
 
 	l, ok := list.(Lists)
@@ -133,20 +133,20 @@ func (s *InMemoryStorage) LPUSH(key string, value string) (int, error) {
 		return 0, NewError(CorruptedListCode, "could not convert list into internal representation")
 	}
 
-	l = append([]string{value}, l...)
+	l = append(value, l...)
 	s.bucket[key] = l
 
 	return len(l), nil
 }
 
-func (s *InMemoryStorage) RPUSH(key string, value string) (int, error) {
+func (s *InMemoryStorage) RPUSH(key string, value ...string) (int, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	list, ok := s.bucket[key]
 	if !ok {
-		s.bucket[key] = Lists{value}
-		return 1, nil
+		s.bucket[key] = Lists(value)
+		return len(value), nil
 	}
 
 	l, ok := list.(Lists)
@@ -154,7 +154,7 @@ func (s *InMemoryStorage) RPUSH(key string, value string) (int, error) {
 		return 0, NewError(CorruptedListCode, "could not convert list into internal representation")
 	}
 
-	l = append(l, value)
+	l = append(l, value...)
 	s.bucket[key] = l
 
 	return len(l), nil

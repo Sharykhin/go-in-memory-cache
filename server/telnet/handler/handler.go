@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/Sharykhin/go-in-memory-cache/cache"
+
 	"github.com/Sharykhin/go-in-memory-cache/server/telnet/request"
 )
 
@@ -13,8 +15,14 @@ type (
 		Serve(w io.Writer, r *request.Request)
 	}
 
+	Storage interface {
+		SET(key string, value interface{}) (string, error)
+		GET(key string) interface{}
+	}
+
 	// CacheHandler would work around cache and use embed cache package
 	CacheHandler struct {
+		storage Storage
 	}
 )
 
@@ -25,5 +33,7 @@ func (h CacheHandler) Serve(w io.Writer, r *request.Request) {
 
 // NewCacheHandler is a constructor that returns cache handler
 func NewCacheHandler() *CacheHandler {
-	return &CacheHandler{}
+	return &CacheHandler{
+		storage: cache.New(),
+	}
 }
