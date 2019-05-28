@@ -7,7 +7,7 @@ type (
 	// Args contains a slice of arguments depending on a command
 	Request struct {
 		Command string
-		Args []string
+		Args    []string
 	}
 )
 
@@ -17,6 +17,6 @@ func NewRequestFromMessage(msg string) *Request {
 
 	return &Request{
 		Command: args[0],
-		Args: args[1:],
+		Args:    args[1:],
 	}
 }

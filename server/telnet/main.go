@@ -4,6 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"log"
+
+	"github.com/Sharykhin/go-in-memory-cache/server/telnet/handler"
+	"github.com/Sharykhin/go-in-memory-cache/server/telnet/server"
 )
 
 var (
@@ -13,7 +16,7 @@ var (
 func main() {
 	flag.Parse()
 
-	h := handler.NewMainHandler()
+	h := handler.NewCacheHandler()
 	fmt.Printf("start listening on %s\n", *addr)
-	log.Fatal(server.ListenAndServe(*addr))
+	log.Fatal(server.ListenAndServe(*addr, h))
 }

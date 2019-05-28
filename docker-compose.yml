@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  cache-telnet:
+    container_name: cache-telnet
+    build:
+      context: .
+      dockerfile: .docker/telnet/Dockerfile
+    ports:
+      - 4000:4000
