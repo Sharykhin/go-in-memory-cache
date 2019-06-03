@@ -143,3 +143,44 @@ func TestInMemoryStorage_RPOP(t *testing.T) {
 	res, _ = cache.LRANGE("testlist", 0, -1)
 	assert.Equal(t, []string{"hello"}, res)
 }
+
+func TestInMemoryStorage_HMSET(t *testing.T) {
+	cache := New()
+
+	_, err := cache.HMSET("testdict", "key1", "val1", "key2")
+	cacheErr := err.(*Error)
+	assert.Equal(t, WrongNumberOfArguments, cacheErr.Code)
+
+	res, err := cache.HMSET("testdict", "key1", "val1", "key2", "val2")
+	assert.Equal(t, SuccessResponse, res)
+}
+
+func TestInMemoryStorage_HMGET(t *testing.T) {
+	cache := New()
+
+	_, _ = cache.HMSET("testdict", "key1", "val1", "key2", "val2")
+
+	_, err := cache.HMGET("nonexisting", "key1", "key2")
+	cacheErr := err.(*Error)
+
+	assert.Equal(t, DictionaryDoesNotExist, cacheErr.Code)
+
+	res, err := cache.HMGET("testdict", "key1", "key2", "key3")
+	assert.Equal(t, 3, len(res))
+	assert.Equal(t, []string{"val1", "val2", ""}, res)
+}
+
+func TestInMemoryStorage_HGETALL(t *testing.T) {
+	cache := New()
+
+	_, _ = cache.HMSET("testdict", "key1", "val1", "key2", "val2")
+
+	_, err := cache.HGETALL("nonexisting")
+	cacheErr := err.(*Error)
+
+	assert.Equal(t, DictionaryDoesNotExist, cacheErr.Code)
+
+	res, _ := cache.HGETALL("testdict")
+	assert.Equal(t, 4, len(res))
+	assert.Equal(t, []string{"key1", "val1", "key2", "val2"}, res)
+}

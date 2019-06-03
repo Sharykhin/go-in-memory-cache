@@ -6,8 +6,11 @@ const (
 	UnsupportedTypeCode = iota
 	KeyDoesNotExistCode
 	CorruptedListCode
+	CorruptedDictionaryCode
 	EmptyList
 	SliceBoundsOutOfRange
+	WrongNumberOfArguments
+	DictionaryDoesNotExist
 )
 
 type (

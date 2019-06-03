@@ -208,3 +208,60 @@ func (s *InMemoryStorage) RPOP(key string) (string, error) {
 
 	return item, nil
 }
+
+func (s *InMemoryStorage) HMSET(key string, args ...string) (string, error) {
+	if len(args)%2 != 0 {
+		return "", NewError(WrongNumberOfArguments, "wrong number of arguments for HMSET")
+	}
+
+	set := make(Dict, len(args)/2)
+	for i := 0; i <= len(args)/2; i += 2 {
+		set[args[i]] = args[i+1]
+	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.bucket[key] = set
+
+	return SuccessResponse, nil
+}
+
+func (s *InMemoryStorage) HMGET(key string, fields ...string) ([]string, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	dict, ok := s.bucket[key].(Dict)
+	if !ok {
+		return nil, NewError(DictionaryDoesNotExist, "dictionary does not exist")
+	}
+
+	res := make([]string, len(fields), len(fields))
+
+	for i, field := range fields {
+		// All fields that do not exist are replaced with empty string
+		// Hence no need to check on field existence
+		val := dict[field]
+		res[i] = val
+	}
+
+	return res, nil
+}
+
+// HGETALL returns all keys and value of dictionary as a slice
+func (s *InMemoryStorage) HGETALL(key string) ([]string, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	val, ok := s.bucket[key]
+	if !ok {
+		return nil, NewError(DictionaryDoesNotExist, "dictionary does not exist")
+	}
+
+	dict, ok := val.(Dict)
+	if !ok {
+		return nil, NewError(CorruptedDictionaryCode, "internal representation of dictionary is corrupted")
+	}
+
+	return dict.AsSlice(), nil
+}
