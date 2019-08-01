@@ -7,17 +7,21 @@ import (
 )
 
 type (
+	// InMemoryStorage is a redis-like cache storage
+	// that implements similar methods
 	InMemoryStorage struct {
 		mu     sync.RWMutex
 		bucket map[string]interface{}
 	}
 
+	// Response is a general response struct with appropriate type and value
 	Response struct {
 		T     string
 		Value interface{}
 	}
 )
 
+// New is a function constructor that return a new instance of in-memory cache
 func New() *InMemoryStorage {
 	return &InMemoryStorage{
 		mu:     sync.RWMutex{},
@@ -25,24 +29,22 @@ func New() *InMemoryStorage {
 	}
 }
 
+// String implements Stringer interface so this struct can be used by fmt package
 func (r Response) String() string {
 	return fmt.Sprintf("(%s) %v", r.T, r.Value)
 }
 
+// SET sets a new key-value. It overrides the previous value if it was set
 func (s *InMemoryStorage) SET(key string, value interface{}) (*Response, error) {
 	var t string
 	switch value.(type) {
 	case string:
-		fmt.Println("string", value)
 		t = "string"
 	case int:
-		fmt.Println("integer", value)
 		t = "integer"
 	case Lists:
-		fmt.Println("lists", value)
 		t = "lists"
 	case Dict:
-		fmt.Println("dict", value)
 		t = "dict"
 	default:
 		return nil, NewError(UnsupportedTypeCode, fmt.Sprintf("value has unsupported type %T", value))
@@ -56,6 +58,7 @@ func (s *InMemoryStorage) SET(key string, value interface{}) (*Response, error) 
 	return &Response{T: t, Value: value}, nil
 }
 
+// GET returns value by its key
 func (s InMemoryStorage) GET(key string) interface{} {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
@@ -63,6 +66,7 @@ func (s InMemoryStorage) GET(key string) interface{} {
 	return s.bucket[key]
 }
 
+// EXPIRE set expiration time for a specific key
 func (s InMemoryStorage) EXPIRE(key string, ttl int) (string, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
