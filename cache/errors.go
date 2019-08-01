@@ -5,18 +5,26 @@ import "fmt"
 const (
 	UnsupportedTypeCode = iota
 	KeyDoesNotExistCode
+	CorruptedListCode
+	CorruptedDictionaryCode
+	EmptyList
+	SliceBoundsOutOfRange
+	WrongNumberOfArguments
+	DictionaryDoesNotExist
 )
 
 type (
-	// Error is a common error struct that is used across the storage
-	// with an internal code and message
+	// Error represents all error within cache package
+	// Apart message it contains code to make it easier
+	// to understand an error meaning
 	Error struct {
 		Code    int
 		Message string
 	}
 )
 
-// Error implements error interface so we can return our struct like an error
+// Error implements error interface
+// So Error struct can be used an error return type
 func (e *Error) Error() string {
 	return fmt.Sprintf("Error code: %d. Error message: %s", e.Code, e.Message)
 }

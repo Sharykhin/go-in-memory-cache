@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	EXIT = "exit"
+	ExitCommand = "exit"
 )
 
 type (
@@ -67,7 +67,7 @@ func (s Server) handle(conn net.Conn, handler handler.Handler) {
 
 		msg = strings.TrimSpace(msg)
 
-		if msg == EXIT {
+		if msg == ExitCommand {
 			s.Logger.Printf("connection closed.\n")
 			return
 		}
